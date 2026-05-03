@@ -10,14 +10,12 @@ local aiming = false
 -- GUI
 local gui = Instance.new("ScreenGui")
 gui.Parent = gethui and gethui() or game.CoreGui
-gui.Name = "MM2Shoot"
 
 local frame = Instance.new("Frame")
 frame.Parent = gui
 frame.Size = UDim2.new(0,150,0,65)
 frame.Position = UDim2.new(0,20,0,300)
 frame.BackgroundColor3 = Color3.fromRGB(10,10,10)
-frame.BorderSizePixel = 0
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
 
 local stroke = Instance.new("UIStroke")
@@ -75,7 +73,7 @@ UIS.TouchMoved:Connect(function(input)
 	end
 end)
 
--- tìm murder (kể cả trong túi)
+-- tìm murder
 local function getMurder()
 	for _, plr in pairs(Players:GetPlayers()) do
 		if plr ~= player and plr.Character then
@@ -99,7 +97,7 @@ local function getMurder()
 	return nil
 end
 
--- AIM FIX NHẢY + MƯỢT
+-- AIM GHIM THÂN (ỔN ĐỊNH)
 shoot.MouseButton1Click:Connect(function()
 	if aiming then return end
 	
@@ -114,14 +112,10 @@ shoot.MouseButton1Click:Connect(function()
 			local root = murder.Character.HumanoidRootPart
 			
 			local velocity = root.Velocity
-			
-			-- bỏ trục Y (fix nhảy)
 			local horizontalVelocity = Vector3.new(velocity.X, 0, velocity.Z)
 
-			-- dự đoán + aim lên đầu
-			local predictedPos = root.Position 
-				+ (horizontalVelocity * 0.12)
-				+ Vector3.new(0, 1.5, 0)
+			-- lead ít lại cho chắc
+			local predictedPos = root.Position + (horizontalVelocity * 0.08)
 
 			camera.CFrame = CFrame.lookAt(
 				camera.CFrame.Position,
