@@ -99,7 +99,7 @@ local function getMurder()
 	return nil
 end
 
--- AIM MƯỢT + DỰ ĐOÁN
+-- AIM FIX NHẢY + MƯỢT
 shoot.MouseButton1Click:Connect(function()
 	if aiming then return end
 	
@@ -113,8 +113,15 @@ shoot.MouseButton1Click:Connect(function()
 		if murder.Character and murder.Character:FindFirstChild("HumanoidRootPart") then
 			local root = murder.Character.HumanoidRootPart
 			
-			-- dự đoán vị trí (giảm trượt)
-			local predictedPos = root.Position + (root.Velocity * 0.12)
+			local velocity = root.Velocity
+			
+			-- bỏ trục Y (fix nhảy)
+			local horizontalVelocity = Vector3.new(velocity.X, 0, velocity.Z)
+
+			-- dự đoán + aim lên đầu
+			local predictedPos = root.Position 
+				+ (horizontalVelocity * 0.12)
+				+ Vector3.new(0, 1.5, 0)
 
 			camera.CFrame = CFrame.lookAt(
 				camera.CFrame.Position,
