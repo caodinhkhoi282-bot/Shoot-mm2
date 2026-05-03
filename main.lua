@@ -1,5 +1,7 @@
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
 local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 
@@ -73,7 +75,7 @@ UIS.TouchMoved:Connect(function(input)
 	end
 end)
 
--- tìm murder
+-- tìm murder (kể cả trong túi)
 local function getMurder()
 	for _, plr in pairs(Players:GetPlayers()) do
 		if plr ~= player and plr.Character then
@@ -97,7 +99,7 @@ local function getMurder()
 	return nil
 end
 
--- aim 10 giây
+-- AIM MƯỢT + DỰ ĐOÁN
 shoot.MouseButton1Click:Connect(function()
 	if aiming then return end
 	
@@ -109,12 +111,18 @@ shoot.MouseButton1Click:Connect(function()
 
 	while tick() < endTime do
 		if murder.Character and murder.Character:FindFirstChild("HumanoidRootPart") then
+			local root = murder.Character.HumanoidRootPart
+			
+			-- dự đoán vị trí (giảm trượt)
+			local predictedPos = root.Position + (root.Velocity * 0.12)
+
 			camera.CFrame = CFrame.lookAt(
 				camera.CFrame.Position,
-				murder.Character.HumanoidRootPart.Position
+				predictedPos
 			)
 		end
-		task.wait()
+		
+		RunService.RenderStepped:Wait()
 	end
 
 	aiming = false
